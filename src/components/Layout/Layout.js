@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import styled from 'styled-components';
 
 import NavigationBar from './/NavigationBar/NavigationBar';
@@ -8,7 +8,7 @@ import BackToTopButton from './BackToTopButton/BackToTopButton';
 import Container from 'react-bootstrap/Container';
 
 const Styles = styled.div`
-    .container{
+    .main-container{
         background-color: #4367A8;
         margin-top: 2.5rem;
         min-height: 600px;
@@ -16,14 +16,16 @@ const Styles = styled.div`
 `;
 
 const Layout = (props) => (
-<Styles>
-<NavigationBar />
-    <Container className="container">
-        {props.children}
-    </Container>
-    <BackToTopButton/>
-<Footer/>
-    </Styles>
+    <Fragment>
+        <Styles>
+            <NavigationBar />
+            <Container className="main-container">
+                {props.children}
+            </Container>
+            <BackToTopButton />
+        </Styles>
+        <Footer />
+    </Fragment>
 );
 
 export default Layout;
