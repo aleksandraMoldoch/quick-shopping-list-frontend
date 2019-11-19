@@ -65,7 +65,7 @@ class RecepiesList extends Component {
                     return (
                         <Recepie
                             key={id}
-                            imageUrl={'http://aleksandramoldoch.com:8080/' + imageUrl}
+                            imageUrl={'http://aleksandramoldoch.com:8080/images/' + imageUrl}
                             recepieName={recepieName}
                             clickedDetails={() => this.recepieSelectedHandler(id)}
                             clickedAdd={() => this.addToShoppingList(ingredients)}

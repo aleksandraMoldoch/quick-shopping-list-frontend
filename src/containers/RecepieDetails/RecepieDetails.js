@@ -102,7 +102,7 @@ class RecepieDetails extends Component {
                                 {this.state.recepie.imageUrl ?
                                     <Col lg={4}>
                                         <Figure.Image
-                                            src={'http://aleksandramoldoch.com:8080/' + this.state.recepie.imageUrl}
+                                            src={'http://aleksandramoldoch.com:8080/images/' + this.state.recepie.imageUrl}
                                         />
                                     </Col>
                                     : <Spinner />}

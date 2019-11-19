@@ -20,11 +20,6 @@ class NewRecepie extends Component {
     constructor(props) {
         super(props);
 
-        let image = null;
-
-        if (props.imageUrl) {
-            image = props.imageUrl.split("\\")[1]
-        }
         this.state = {
             ingredients: props.ingredients || [],
             newIngredient: {
@@ -33,7 +28,7 @@ class NewRecepie extends Component {
                 name: ""
             },
             recepieName: props.recepieName || "",
-            image: image,
+            image: props.imageUrl,
             completed: false
         };
     };
