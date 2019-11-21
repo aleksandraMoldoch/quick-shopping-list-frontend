@@ -30,31 +30,13 @@ class ShoppingList extends Component {
     };
 
     loadIngredients = () =>{
-        axios.get('/shopping-list/')
+        axios.get('/shopping-list/1')
         .then(res => {
             this.setState({ ingredients: res.data.listIngredient });
         })
         .catch(error => {
             console.log(error);
         });
-    };
-
-    saveShoppingListHandler = () => {
-        this.setState({
-            edite: false
-        });
-
-        if(!this.state.ingredients){
-            throw new Error('BRAK SKŁADNIKÓW');
-        }else{
-        axios.post('/shoppinglist/', this.state.ingredients)
-            .then((res) => {
-                if (res.status !== 200) {
-                    throw new Error('BŁĄD');
-                }
-                this.setState({ completed: true });
-            })
-            .catch(this.catchError)}
     };
 
     addNewIngredientHandler = (values) => {
@@ -96,8 +78,18 @@ class ShoppingList extends Component {
         });
     };
 
-    removeIngredientHandler = (index) => {
+    removeIngredientHandler = (id) => {
+
+        axios.delete('/shopping-list/1', { data: {id}})
+        .then(res => {
+            if (res.status !== 200 && res.status !== 201) {
+                throw new Error('Deleting post failed!');
+            }
+        })
+        .catch(this.catchError);
+
         const ingredients = [...this.state.ingredients];
+        const index = ingredients.findIndex(ingredient => ingredient.id === id)
         ingredients.splice(index, 1);
         this.setState({ ingredients: ingredients });
     };
@@ -123,7 +115,6 @@ class ShoppingList extends Component {
                     </div>}
                 <Row style={{margin:'1rem'}}>
                 {!this.state.edite ? <Button variant="mystyle" size="mysize" onClick={this.editeHandler}>Edit Shopping List</Button> : null}
-                    <Button variant="mystyle" size="mysize">Save Shopping List</Button>
                 </Row>
                 {this.state.edite ? <NewIngredient submitAddIngredient={this.addNewIngredientHandler}/> : null}
                 </Styles>

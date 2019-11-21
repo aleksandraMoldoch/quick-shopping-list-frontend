@@ -39,7 +39,7 @@ class RecepiesList extends Component {
     };
 
     addToShoppingList = (ingredients) => {
-        axios.post('/shopping-list', ingredients)
+        axios.post('/shopping-list/1', ingredients)
             .then(res => {
                 if (!res) {
                     throw new Error('BŁĄD');

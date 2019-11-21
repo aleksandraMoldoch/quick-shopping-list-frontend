@@ -19,11 +19,11 @@ const ingredientList = (props) => (
                 { props.ingredients.map((ingredient, index) => {
                     return (
                         <Ingredient
-                            key={index}
+                            key={ingredient.id}
                             quantity={ingredient.quantity}
                             unit={ingredient.unit}
                             name={ingredient.name}
-                            remove={() => props.remove(index)} />)
+                            remove={() => props.remove(ingredient.id)} />)
                 })}
                 </div>
         </Styles>

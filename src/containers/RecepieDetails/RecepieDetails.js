@@ -69,7 +69,7 @@ class RecepieDetails extends Component {
 
     addToShoppingListHandler = () => {
         const ingredients = this.state.recepie.ingredients;
-        axios.post('/shopping-list', ingredients)
+        axios.post('/shopping-list/1', ingredients)
             .then((res) => {
                 if (res.status !== 200) {
                     throw new Error('BŁĄD');
