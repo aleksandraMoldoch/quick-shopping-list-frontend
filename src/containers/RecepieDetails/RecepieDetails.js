@@ -53,18 +53,18 @@ class RecepieDetails extends Component {
         };
     };
 
-    deleteRcepieHandler = () => {
-        axios.delete('/recepie/' + this.props.match.params.id)
-            .then(res => {
-                if (res.status !== 200 && res.status !== 201) {
-                    throw new Error('Deleting post failed!');
-                }
-                this.setState({
-                    recepie: [],
-                    deleted: true
-                });
-            })
-            .catch(this.catchError);
+    deleteRcepieHandler = async () => {
+        try {
+            let res = await axios.delete('/recepie/' + this.props.match.params.id)
+            if (res.status !== 200 && res.status !== 201) {
+                throw new Error('Deleting post failed!');
+            };
+            this.setState({
+                recepie: [],
+                deleted: true
+            });
+        }
+        catch (error) { console.log(error) }
     };
 
     addToShoppingListHandler = () => {
