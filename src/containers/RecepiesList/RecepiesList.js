@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import axios from '../../axios';
+import axios, { URLaddress } from '../../axios';
 
 import Recepie from '../../components/Recepie/Recepie';
 import Spinner from '../../assest/Spinner';
@@ -65,7 +65,7 @@ class RecepiesList extends Component {
                     return (
                         <Recepie
                             key={id}
-                            imageUrl={'http://aleksandramoldoch.com:8080/images/' + imageUrl}
+                            imageUrl={URLaddress + '/images/' + imageUrl}
                             recepieName={recepieName}
                             clickedDetails={() => this.recepieSelectedHandler(id)}
                             clickedAdd={() => this.addToShoppingList(ingredients)}

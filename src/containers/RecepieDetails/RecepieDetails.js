@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import axios from '../../axios';
+import axios, { URLaddress } from '../../axios';
 
 import Button from 'react-bootstrap/Button';
 import Figure from 'react-bootstrap/Figure';
@@ -102,7 +102,7 @@ class RecepieDetails extends Component {
                                 {this.state.recepie.imageUrl ?
                                     <Col lg={4}>
                                         <Figure.Image
-                                            src={'http://aleksandramoldoch.com:8080/images/' + this.state.recepie.imageUrl}
+                                            src={URLaddress + '/images/' + this.state.recepie.imageUrl}
                                         />
                                     </Col>
                                     : <Spinner />}

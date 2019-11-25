@@ -1,5 +1,7 @@
 import React, { Component, Fragment } from "react";
 
+import {URLaddress} from '../../axios';
+
 import Form from 'react-bootstrap/Form';
 import Col from "react-bootstrap/Col";
 import Image from "react-bootstrap/Image";
@@ -66,7 +68,7 @@ class ImageInput extends Component {
         let imagePreview = '';
 
         if (this.props.imagePreview && !this.state.changed) {
-            imagePreview = 'http://aleksandramoldoch.com:8080/images/' + this.state.imagePreviewUrl;
+            imagePreview = URLaddress +'/images/' + this.state.imagePreviewUrl;
         } else {
             imagePreview = this.state.imagePreviewUrl
         };
