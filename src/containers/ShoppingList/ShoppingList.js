@@ -1,47 +1,111 @@
 import React, { Component, Fragment } from 'react';
 import axios from '../../axios';
 
-import IngredientList from '../../components/IngredientList/IngredientList';
+import IngredientList from '../../components/IngredientList/DragAndDropIngredients/DroppableIngredientList';
 import NewIngredient from '../../components/NewIngredient/NewIngredient';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
-import Button from 'react-bootstrap/Button';
+import { DragDropContext } from 'react-beautiful-dnd';
 import Row from 'react-bootstrap/Row';
 
 import Styles from './Styles';
 
 class ShoppingList extends Component {
-
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             ingredients: [],
-            newIngredient: {
-                quantity: "",
-                unit: "",
-                name: ""
-            },
-            edite: false
+            column: {
+                id: 'column-1'
+            }
         };
     };
 
     componentDidMount = () => {
-       this.loadIngredients()
+        this.loadIngredients()
     };
 
-    loadIngredients = () =>{
-        axios.get('/shopping-list/1')
-        .then(res => {
-            this.setState({ ingredients: res.data.listIngredient });
-        })
-        .catch(error => {
+    loadIngredients = async () => {
+        try {
+            let res = await axios.get('/shopping-list/1')
+            if (res.status === 200) {
+                this.setState({
+                    ingredients: res.data.listIngredient,
+                });
+            } else {
+                throw new Error('Unable to fetch ingredients list.');
+            }
+        } catch (error) {
             console.log(error);
-        });
+        };
     };
 
-    addNewIngredientHandler = (values) => {
-        const ingredients = [...this.state.ingredients];
-        let change = false;
+    onDragEnd = async result => {
+        const { destination, source } = result;
+
+        if (!destination) { return }
+
+        if (destination.droppableId === source.droppableId &&
+            destination.index === source.index) { return }
+
+        const newIngredients = Array.from(this.state.ingredients);
+        newIngredients.splice(destination.index, 0, newIngredients.splice(source.index, 1)[0]);
+
+        let ingredients = [];
+
+        if (destination.index > source.index) {
+
+            let changedIngredients = this.state.ingredients.slice(source.index + 1, destination.index + 1);
+            changedIngredients.map(ingredient => {
+                ingredients.push({
+                    id: ingredient.id,
+                    orderId: ingredient.orderId - 1
+                });
+            });
+
+            let changedIngredient = this.state.ingredients.slice(source.index, source.index + 1);
+
+            ingredients.push({
+                id: changedIngredient[0].id,
+                orderId: changedIngredient[0].orderId + (destination.index - source.index)
+            });
+
+        } else {
+
+            let changedIngredients = this.state.ingredients.slice(destination.index, source.index);
+
+            changedIngredients.map(ingredient => {
+                ingredients.push({
+                    id: ingredient.id,
+                    orderId: ingredient.orderId + 1
+                });
+            });
+
+            let changedIngredient = this.state.ingredients.slice(source.index, source.index + 1);
+
+            ingredients.push({
+                id: changedIngredient[0].id,
+                orderId: changedIngredient[0].orderId - (source.index - destination.index)
+            });
+        }
+
+        this.setState({
+            ingredients: newIngredients
+        });
+
+        try {
+            let res = await axios.put('/shopping-list/1', ingredients);
+            if (res.status === 200) {
+                this.loadIngredients();
+            } else {
+                throw new Error('Unable to update ingredients order.');
+            }
+        } catch (err) {
+            console.log(err);
+        };
+    };
+
+    addNewIngredientHandler = async (values) => {
 
         if (isNaN(values.quantity)) {
             let quantityArr = values.quantity.split("/");
@@ -49,74 +113,49 @@ class ShoppingList extends Component {
             values.quantity = newQuantity;
         };
 
-        ingredients.map((ingredient) => {
-            if (ingredient.name === values.ingredientName && ingredient.unit === values.unit) {
-                ingredient.quantity = Number(ingredient.quantity) + Number(values.quantity);
-                change = true;
-            }
-            return ingredient;
-        });
+        let ingredient = [{
+            name: values.ingredientName,
+            unit: values.unit,
+            quantity: values.quantity
+        }]
 
-        if (!change) {
-            this.setState({
-                newIngredient: {
-                    quantity: values.quantity,
-                    unit: values.unit,
-                    name: values.ingredientName
-                }
-            })
-            ingredients.push({ ...this.state.newIngredient });
+        try {
+            let res = await axios.post('/shopping-list/1', ingredient)
+            if (res.status === 200) {
+                this.loadIngredients()
+            } else {
+                throw new Error('Unable to add new ingredient.');
+            }
+        } catch (err) {
+            console.log(err);
         };
-
-        this.setState({
-            ingredients: ingredients,
-            newIngredient: {
-                quantity: "",
-                unit: "",
-                name: ""
-            }
-        });
     };
 
-    removeIngredientHandler = (id) => {
-
-        axios.delete('/shopping-list/1', { data: {id}})
-        .then(res => {
-            if (res.status !== 200 && res.status !== 201) {
-                throw new Error('Deleting post failed!');
+    removeIngredientHandler = async (id) => {
+        try {
+            let res = await axios.delete('/shopping-list/1', { data: { id } });
+            if (res.status !== 200) {
+                throw new Error('Unable to delete ingredient.');
             }
-        })
-        .catch(this.catchError);
-
-        const ingredients = [...this.state.ingredients];
-        const index = ingredients.findIndex(ingredient => ingredient.id === id)
-        ingredients.splice(index, 1);
-        this.setState({ ingredients: ingredients });
-    };
-
-    editeHandler = () =>{
-        this.setState({
-            edite: true
-        });
+            this.loadIngredients()
+        } catch (err) {
+            console.log(err)
+        };
     };
 
     render() {
         return (
             <Fragment>
                 <Styles>
-                <Row className="name">Your shopping list:</Row>
-                {this.state.ingredients ?
-                    <IngredientList
-                    ingredients={this.state.ingredients}
-                    mystyle={'sl'}
-                    remove={this.removeIngredientHandler} />
-                    : <div className="spinner-border text-primary" role="status">
-                        <span className="sr-only">Loading...</span>
-                    </div>}
-                <Row style={{margin:'1rem'}}>
-                {!this.state.edite ? <Button variant="mystyle" size="mysize" onClick={this.editeHandler}>Edit Shopping List</Button> : null}
-                </Row>
-                {this.state.edite ? <NewIngredient submitAddIngredient={this.addNewIngredientHandler}/> : null}
+                    <Row className="name">Your shopping list:</Row>
+                    <DragDropContext onDragEnd={this.onDragEnd}>
+                        <IngredientList
+                            droppableId={'column-1'}
+                            key={'column-1'}
+                            ingredients={this.state.ingredients}
+                            remove={this.removeIngredientHandler} />
+                    </DragDropContext>
+                    <NewIngredient submitAddIngredient={this.addNewIngredientHandler} />
                 </Styles>
             </Fragment>
         );
