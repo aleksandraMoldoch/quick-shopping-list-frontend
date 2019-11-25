@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import axios, { URLaddress } from '../../axios';
 
-import Recepie from '../../components/Recepie/Recepie';
+import Recipe from '../../components/Recipe/Recipe';
 import Spinner from '../../assest/Spinner';
 import InfoAlert from '../../components/Alerts/InfoAlert';
 
@@ -10,28 +10,28 @@ import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 import CardDeck from 'react-bootstrap/CardDeck';
 
-class RecepiesList extends Component {
+class RecipesList extends Component {
 
     state = {
-        recepies: [],
+        recipes: [],
         add: false
     }
 
     componentDidMount() {
-        this.loadRecepiesList();
+        this.loadRecipesList();
     };
 
-    recepieSelectedHandler = (id) => {
-        this.props.history.push('/recepies/' + id);
+    recipeSelectedHandler = (id) => {
+        this.props.history.push('/recipes/' + id);
     };
 
-    loadRecepiesList = () => {
-        axios.get('/recepies/')
+    loadRecipesList = () => {
+        axios.get('/recipes/')
             .then(res => {
                 if (!res) {
                     throw new Error('BŁĄD');
                 }
-                this.setState({ recepies: res.data.recepies });
+                this.setState({ recipes: res.data.recipes });
             })
             .catch(error => {
                 console.log(error.response);
@@ -57,17 +57,17 @@ class RecepiesList extends Component {
         });
     };
 
-    renderRecepieHandler = () => {
+    renderRecipeHandler = () => {
         return (
             <CardDeck className="justify-content-center">
-                {this.state.recepies.map((recepie) => {
-                    const { id, imageUrl, recepieName, ingredients } = recepie
+                {this.state.recipes.map((recipe) => {
+                    const { id, imageUrl, recipeName, ingredients } = recipe
                     return (
-                        <Recepie
+                        <Recipe
                             key={id}
                             imageUrl={URLaddress + '/images/' + imageUrl}
-                            recepieName={recepieName}
-                            clickedDetails={() => this.recepieSelectedHandler(id)}
+                            recipeName={recipeName}
+                            clickedDetails={() => this.recipeSelectedHandler(id)}
                             clickedAdd={() => this.addToShoppingList(ingredients)}
                         />);
                 })}
@@ -79,10 +79,10 @@ class RecepiesList extends Component {
         return (
             <React.Fragment>
                 {this.state.add ? <InfoAlert /> : null}
-                {this.state.recepies ? this.renderRecepieHandler() : <Spinner />}
+                {this.state.recipes ? this.renderRecipeHandler() : <Spinner />}
             </React.Fragment>
         );
     };
 };
 
-export default withErrorHandler(RecepiesList, axios);
+export default withErrorHandler(RecipesList, axios);

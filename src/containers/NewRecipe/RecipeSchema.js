@@ -2,8 +2,8 @@ import * as Yup from 'yup';
 const FILE_SIZE = 5 * 1024 * 1024;
 const SUPPORTED_FORMATS = ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'];
 
-const recepieSchema = Yup.object().shape({
-    recepieName: Yup.string()
+const recipeSchema = Yup.object().shape({
+    recipeName: Yup.string()
         .min(2, 'Too Short!')
         .max(50, 'Too Long!')
         .required('Required'),
@@ -21,4 +21,4 @@ const recepieSchema = Yup.object().shape({
         )
 });
 
-export default recepieSchema;
+export default recipeSchema;

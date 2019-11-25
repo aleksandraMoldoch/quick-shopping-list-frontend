@@ -9,8 +9,8 @@ import Styles from './Styles';
 
 const ingredientList = (props) => (
     <Styles>
-        <div className="new-recepie-list">
-                <Row className="new-recepie-row justify-content-center">
+        <div className="new-recipe-list">
+                <Row className="new-recipe-row justify-content-center">
                     <Col xl={2} lg={2} md={2} sm={2} xs={8}>Quantity</Col>
                     <Col xl={2} lg={2} md={4} sm={4} xs={8}>Unit</Col>
                     <Col xl={4} lg={4} md={4} sm={4} xs={8}>Ingredient</Col>
@@ -19,7 +19,7 @@ const ingredientList = (props) => (
                 { props.ingredients.map((ingredient, index) => {
                     return (
                         <Ingredient
-                            key={ingredient.id}
+                            key={index}
                             quantity={ingredient.quantity}
                             unit={ingredient.unit}
                             name={ingredient.name}

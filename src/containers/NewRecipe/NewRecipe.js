@@ -11,12 +11,12 @@ import IngredientList from '../../components/IngredientList/IngredientList';
 import NewIngredient from '../../components/NewIngredient/NewIngredient';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
-import RecepieSchema from '../NewRecepie/RecepieSchema';
-import ImageInput from '../NewRecepie/ImageInput';
+import RecipeSchema from '../NewRecipe/RecipeSchema';
+import ImageInput from '../NewRecipe/ImageInput';
 
 import Styles from './Styles';
 
-class NewRecepie extends Component {
+class NewRecipe extends Component {
     constructor(props) {
         super(props);
 
@@ -27,25 +27,25 @@ class NewRecepie extends Component {
                 unit: "",
                 name: ""
             },
-            recepieName: props.recepieName || "",
+            recipeName: props.recipeName || "",
             image: props.imageUrl,
             completed: false
         };
     };
 
-    addNewRecepieHandler = (values) => {
+    addNewRecipeHandler = (values) => {
         const formData = new FormData();
         const ingredients = this.state.ingredients;
 
         const config = { headers: { 'content-type': 'multipart/form-data' } };
 
         formData.append('image', values.image);
-        formData.append('recepieName', values.recepieName);
+        formData.append('recipeName', values.recipeName);
         ingredients.map((ingredient) => {
             return formData.append('ingredients[]', JSON.stringify(ingredient));
         });
 
-        axios.post('/recepie/', formData, config)
+        axios.post('/recipe/', formData, config)
             .then(res => {
                 if (!res) {
                     throw new Error('Error');
@@ -60,7 +60,7 @@ class NewRecepie extends Component {
             });
     };
 
-    updateRecepieHandler = (values) => {
+    updateRecipeHandler = (values) => {
 
         const formData = new FormData();
         const ingredients = this.state.ingredients;
@@ -68,12 +68,12 @@ class NewRecepie extends Component {
         const config = { headers: { 'content-type': 'multipart/form-data' } };
 
         formData.append('image', values.image);
-        formData.append('recepieName', values.recepieName);
+        formData.append('recipeName', values.recipeName);
         ingredients.map((ingredient) => {
             return formData.append('ingredients[]', JSON.stringify(ingredient));
         });
 
-        axios.put('/recepie/' + this.props.id, formData, config)
+        axios.put('/recipe/' + this.props.id, formData, config)
             .then((res) => {
                 if (!res) {
                     throw new Error('Error');
@@ -140,10 +140,10 @@ class NewRecepie extends Component {
                 <Styles>
                     {this.state.completed ? <SucsessAlert message={'Pomyślnie dodano nowy przepis'} /> :
                         <div as={Col} className="cont justify-content-center">
-                            <Formik validationSchema={RecepieSchema}
-                                initialValues={{ recepieName: this.state.recepieName, image: this.state.image }}
+                            <Formik validationSchema={RecipeSchema}
+                                initialValues={{ recipeName: this.state.recipeName, image: this.state.image }}
                                 onSubmit={(values, { setSubmitting }) => {
-                                    !this.props.id ? this.addNewRecepieHandler(values) : this.updateRecepieHandler(values)
+                                    !this.props.id ? this.addNewRecipeHandler(values) : this.updateRecipeHandler(values)
                                     setSubmitting(false)
                                 }}>
                                 {({ values,
@@ -155,20 +155,20 @@ class NewRecepie extends Component {
                                     setFieldValue,
                                     isSubmitting }) => (
                                         <Form onSubmit={handleSubmit} >
-                                            <Button className="button" variant="primary" type="submit" active={!errors}>Save recepie!</Button>
-                                            <Form.Group as={Col} lg={9} controlId="recepieName">
-                                                <Form.Label className="label">Recepie name</Form.Label>
+                                            <Button className="button" variant="primary" type="submit" active={!errors}>Save recipe!</Button>
+                                            <Form.Group as={Col} lg={9} controlId="recipeName">
+                                                <Form.Label className="label">Recipe name</Form.Label>
                                                 <Form.Control
                                                     type="string"
-                                                    name="recepieName"
-                                                    placeholder="Recepie name"
+                                                    name="recipeName"
+                                                    placeholder="Recipe name"
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
-                                                    value={values.recepieName}
-                                                    isInvalid={touched.recepieName && !!errors.recepieName}
+                                                    value={values.recipeName}
+                                                    isInvalid={touched.recipeName && !!errors.recipeName}
                                                 />
                                                 <Form.Control.Feedback className="feedback" type="invalid">
-                                                    {errors.recepieName}
+                                                    {errors.recipeName}
                                                 </Form.Control.Feedback>
                                             </Form.Group>
                                             <Field
@@ -197,4 +197,4 @@ class NewRecepie extends Component {
     };
 };
 
-export default withErrorHandler(NewRecepie, axios);
+export default withErrorHandler(NewRecipe, axios);

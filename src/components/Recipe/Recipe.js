@@ -5,12 +5,12 @@ import Card from 'react-bootstrap/Card';
 
 import Styles from './Styles';
 
-const recepie = (props) => (
+const recipe = (props) => (
     <Styles>
         <Card className="card">
             <Card.Img variant="top" src={props.imageUrl} alt="..." className="image" />
             <Card.Body>
-                <Card.Title className="name">{props.recepieName}</Card.Title>
+                <Card.Title className="name">{props.recipeName}</Card.Title>
                 <div className="button-group">
                     <Button variant="mystyle" size="mysize" onClick={props.clickedDetails}>Details</Button>
                     <Button variant="mystyle" size="mysize" onClick={props.clickedAdd}>Add</Button>
@@ -20,4 +20,4 @@ const recepie = (props) => (
     </Styles>
 );
 
-export default recepie;
+export default recipe;

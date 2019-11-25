@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const Styles = styled.div`
-  .new-recepie-list {
+  .new-recipe-list {
     background-color: #F2F2F2;
     color: #373542;
     font-size: 14px;
@@ -23,7 +23,7 @@ const Styles = styled.div`
   &:hover {
     background-color: #eee;
   }}
-  .new-recepie-row {
+  .new-recipe-row {
     color: #373542;
     overflow: hidden
     font-size: 16px;

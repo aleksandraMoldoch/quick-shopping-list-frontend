@@ -12,7 +12,7 @@
 
 ## General info
 This is react application, that helps creating shopping lists - mainly for groceries but you can add anything you want!
-You can choose from recepeies on the website, add your own recepie or just add ingredients directly into shopping list.
+You can choose from recepeies on the website, add your own recipe or just add ingredients directly into shopping list.
 
 ## Technologies
 * React
@@ -31,13 +31,13 @@ Or just check out website:
 ## Features
 Key Features:
 * Creating shopping lists
-* Adding new recepies with list of ingredients
+* Adding new recipes with list of ingredients
 
 To-do list:
 * Login and singup
 * Self sorting ingredients into categories
 * Converting typical measurement units
-* Calculator of calories in recepie
+* Calculator of calories in recipe
 * Changing language
 
 ## Status

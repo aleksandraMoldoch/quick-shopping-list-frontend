@@ -13,15 +13,15 @@ import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import SucsessAlert from '../../components/Alerts/SucsessAlert';
 import InfoAlert from '../../components/Alerts/InfoAlert';
 import Spinner from '../../assest/Spinner';
-import NewRecepie from '../../containers/NewRecepie/NewRecepie';
+import NewRecipe from '../../containers/NewRecipe/NewRecipe';
 import IngredientList from '../../components/IngredientList/IngredientList';
 
 import Styles from './Styles';
 
-class RecepieDetails extends Component {
+class RecipeDetails extends Component {
 
     state = {
-        recepie: [],
+        recipe: [],
         newIngredient: {
             quantity: "",
             unit: "",
@@ -37,15 +37,15 @@ class RecepieDetails extends Component {
     };
 
     loadData() {
-        if (!this.state.recepie || (this.state.recepie && this.state.recepie.id !== +this.props.match.params.id)) {
+        if (!this.state.recipe || (this.state.recipe && this.state.recipe.id !== +this.props.match.params.id)) {
             window.scrollTo({ top: 0 })
-            axios.get('/recepie/' + this.props.match.params.id)
+            axios.get('/recipe/' + this.props.match.params.id)
                 .then(res => {
                     if (!res) {
                         console.log('Faild to fetch')
-                        throw new Error('Faild to fetch recepie');
+                        throw new Error('Faild to fetch recipe');
                     }
-                    this.setState({ recepie: res.data.recepie });
+                    this.setState({ recipe: res.data.recipe });
                 })
                 .catch(error => {
                     console.log(error)
@@ -55,12 +55,12 @@ class RecepieDetails extends Component {
 
     deleteRcepieHandler = async () => {
         try {
-            let res = await axios.delete('/recepie/' + this.props.match.params.id)
+            let res = await axios.delete('/recipe/' + this.props.match.params.id)
             if (res.status !== 200 && res.status !== 201) {
                 throw new Error('Deleting post failed!');
             };
             this.setState({
-                recepie: [],
+                recipe: [],
                 deleted: true
             });
         }
@@ -68,7 +68,7 @@ class RecepieDetails extends Component {
     };
 
     addToShoppingListHandler = () => {
-        const ingredients = this.state.recepie.ingredients;
+        const ingredients = this.state.recipe.ingredients;
         axios.post('/shopping-list/1', ingredients)
             .then((res) => {
                 if (res.status !== 200) {
@@ -96,22 +96,22 @@ class RecepieDetails extends Component {
             <Fragment>
                 <Styles>
                     {!this.state.edite ? <Container className="justify-content-center">
-                        {this.state.deleted ? <SucsessAlert message={'You successfully deleted recepie.'} /> :
+                        {this.state.deleted ? <SucsessAlert message={'You successfully deleted recipe.'} /> :
                             <Row className="justify-content-center">
                                 {this.state.add ? <InfoAlert /> : null}
-                                {this.state.recepie.imageUrl ?
+                                {this.state.recipe.imageUrl ?
                                     <Col lg={4}>
                                         <Figure.Image
-                                            src={URLaddress + '/images/' + this.state.recepie.imageUrl}
+                                            src={URLaddress + '/images/' + this.state.recipe.imageUrl}
                                         />
                                     </Col>
                                     : <Spinner />}
                                 <Col lg={{ span: 6, offset: 1 }} >
                                     <Row className="name">
-                                        {this.state.recepie.recepieName}
+                                        {this.state.recipe.recipeName}
                                     </Row>
                                     <Row>
-                                        <Card.Link className="link" href="https://www.kwestiasmaku.com/pasta/makaron_carbonara/przepis.html">Go to recepie!</Card.Link>
+                                        <Card.Link className="link" href="https://www.kwestiasmaku.com/pasta/makaron_carbonara/przepis.html">Go to recipe!</Card.Link>
                                     </Row>
                                     <Row>
                                         <Button variant="mystyle" size="mysize" onClick={() => this.addToShoppingListHandler()}>Add to shopping list</Button>
@@ -123,20 +123,20 @@ class RecepieDetails extends Component {
                                 </Col>
                                 <Col lg={11} >
                                     <Row className="name" style={{ fontSize: '25px' }}>Ingredients list:</Row>
-                                    {this.state.recepie.ingredients ?
-                                        <IngredientList ingredients={this.state.recepie.ingredients} mystyle={'other'} />
+                                    {this.state.recipe.ingredients ?
+                                        <IngredientList ingredients={this.state.recipe.ingredients} mystyle={'other'} />
                                         : <Spinner />}
                                 </Col> </Row>}
                     </Container> :
-                        <NewRecepie
-                            imageUrl={this.state.recepie.imageUrl}
-                            recepieName={this.state.recepie.recepieName}
-                            ingredients={this.state.recepie.ingredients}
-                            id={this.state.recepie.id} />}
+                        <NewRecipe
+                            imageUrl={this.state.recipe.imageUrl}
+                            recipeName={this.state.recipe.recipeName}
+                            ingredients={this.state.recipe.ingredients}
+                            id={this.state.recipe.id} />}
                 </Styles>
             </Fragment >
         );
     };
 };
 
-export default withErrorHandler(RecepieDetails, axios);
+export default withErrorHandler(RecipeDetails, axios);
