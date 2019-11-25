@@ -7,17 +7,18 @@ const Styles = styled.div`
     font-size: 35px;
 }
 .btn-mystyle{
+    position: sticky;
+    float: right;
+    top: 1rem;
     background-color: transparent;
     border: 1.2px solid #B39974;
-    padding: 3px 5px;
     color: #F2F2F2;
     &:hover{
         background-color: #395385;
     }
 }
 .btn-mysize{
-    margin: 4px;
-    font-size: 17px;
+    font-size: 13px;
 }
 `;
 

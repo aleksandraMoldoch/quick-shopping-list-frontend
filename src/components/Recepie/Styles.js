@@ -32,6 +32,7 @@ const Styles = styled.div`
     }
     .name{
         font-family: 'Muli', sans-serif;
+        text-transform: uppercase;
         color:#ABC5F5;
     }
 `;

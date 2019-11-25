@@ -9,8 +9,8 @@ import Styles from './Styles';
 
 const ingredientList = (props) => (
     <Styles>
-        <div className={props.mystyle==='sl' ? "list" : "list2"}>
-                <Row className={props.mystyle==='sl' ? "row justify-content-center" : "row2 justify-content-center"}>
+        <div className="new-recepie-list">
+                <Row className="new-recepie-row justify-content-center">
                     <Col xl={2} lg={2} md={2} sm={2} xs={8}>Quantity</Col>
                     <Col xl={2} lg={2} md={4} sm={4} xs={8}>Unit</Col>
                     <Col xl={4} lg={4} md={4} sm={4} xs={8}>Ingredient</Col>

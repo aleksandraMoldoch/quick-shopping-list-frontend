@@ -1,29 +1,7 @@
 import styled from 'styled-components';
 
 const Styles = styled.div`
-  .list {
-    background-color: #F2F2F2;
-    font-size: 15px;
-    margin-top: 1rem;
-    padding: 0 !important;
-    width: 80%;
-    margin-right: auto;
-    margin-left: auto;
-    font-family: courier, monospace;
-    border: 1px solid #dedede;
-    position: relative;
-    box-shadow: 0 5px 10px -5px rgba(0,0,0,0.5);
-    &::before {
-      content: "";
-      border-left: 1px solid #ffaa9f;
-      border-right: 1px solid #ffaa9f;
-      width: 2px;
-      position: absolute;
-      height: 100%;
-      left: 8%;
-    }
-  }
-  .list2 {
+  .new-recepie-list {
     background-color: #F2F2F2;
     color: #373542;
     font-size: 14px;
@@ -38,13 +16,14 @@ const Styles = styled.div`
     border-bottom: 1px dotted #ccc;
     overflow: hidden
     margin: auto;
+    width: 100%;
     text-overflow: ellipsis;
     padding: 10px 2px 10px 20px;
     text-transform: capitalize;
   &:hover {
     background-color: #eee;
   }}
-  .row2 {
+  .new-recepie-row {
     color: #373542;
     overflow: hidden
     font-size: 16px;

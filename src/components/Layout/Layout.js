@@ -10,7 +10,7 @@ import Container from 'react-bootstrap/Container';
 const Styles = styled.div`
     .main-container{
         background-color: #4367A8;
-        margin-top: 2.5rem;
+        margin-top: 2rem;
         min-height: 600px;
     }
 `;
