@@ -10,8 +10,8 @@ const loginSchema = Yup.object().shape({
         .required('Login id required'),
     password: Yup.string()
         .min(6, 'Password has to be longer than 6 characters!')
-        .matches(re, 'Password has to be longer than 6 characters!')
-        .required('Password must contain uppercase character, lowercase character and a number!')
+        .matches(re, 'Password must contain uppercase character, lowercase character and a number!')
+        .required('Password has to be longer than 6 characters!')
 });
 
 export default loginSchema;
