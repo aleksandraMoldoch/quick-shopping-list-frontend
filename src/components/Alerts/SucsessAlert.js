@@ -8,7 +8,7 @@ const sucsessAlert = (props) => (
         <Alert.Heading>Sucsses!!</Alert.Heading>
         <p>{props.message}</p>
         <div className="d-flex justify-content-end">
-            <Link to="/recipes/">
+            <Link to={props.destination}>
                 OK!
                 </Link>
         </div>

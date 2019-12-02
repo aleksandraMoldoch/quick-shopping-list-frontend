@@ -29,18 +29,28 @@ class NewRecipe extends Component {
             },
             recipeName: props.recipeName || "",
             image: props.imageUrl,
-            completed: false
+            completed: false,
+            edit: false
         };
     };
 
     addNewRecipeHandler = (values) => {
         const formData = new FormData();
+        const token = localStorage.getItem('token');
+        const userId = localStorage.getItem('userId');
         const ingredients = this.state.ingredients;
 
-        const config = { headers: { 'content-type': 'multipart/form-data' } };
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data',
+                'Authorization': 'Bearer ' + token
+            }
+        };
 
         formData.append('image', values.image);
         formData.append('recipeName', values.recipeName);
+        formData.append('userId', userId);
+
         ingredients.map((ingredient) => {
             return formData.append('ingredients[]', JSON.stringify(ingredient));
         });
@@ -61,14 +71,25 @@ class NewRecipe extends Component {
     };
 
     updateRecipeHandler = (values) => {
-
+        const userId = localStorage.getItem('userId');
+        const token = localStorage.getItem('token');
         const formData = new FormData();
         const ingredients = this.state.ingredients;
 
-        const config = { headers: { 'content-type': 'multipart/form-data' } };
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data',
+                'Authorization': 'Bearer ' + token
+            }
+        };
+
+        if (!userId || !token) {
+            throw new Error('You are not authorized to perform this operation.');
+        }
 
         formData.append('image', values.image);
         formData.append('recipeName', values.recipeName);
+        formData.append('userId', userId);
         ingredients.map((ingredient) => {
             return formData.append('ingredients[]', JSON.stringify(ingredient));
         });
@@ -78,7 +99,10 @@ class NewRecipe extends Component {
                 if (!res) {
                     throw new Error('Error');
                 }
-                this.setState({ completed: true });
+                this.setState({
+                    completed: true,
+                    edit: true
+                });
             })
             .catch(error => {
                 console.log(error);
@@ -138,7 +162,10 @@ class NewRecipe extends Component {
         return (
             <Fragment>
                 <Styles>
-                    {this.state.completed ? <SucsessAlert message={'Pomyślnie dodano nowy przepis'} /> :
+                    {(this.state.edit & this.state.completed) ?
+                        <SucsessAlert message={'Changes added successfully'} destination={'/recipes/'} />
+                        : null}
+                    {(this.state.completed & !this.state.edit) ? <SucsessAlert message={'Added new recipe successfully'} destination={'/recipes/'} /> :
                         <div as={Col} className="cont justify-content-center">
                             <Formik validationSchema={RecipeSchema}
                                 initialValues={{ recipeName: this.state.recipeName, image: this.state.image }}
@@ -152,8 +179,7 @@ class NewRecipe extends Component {
                                     handleChange,
                                     handleBlur,
                                     handleSubmit,
-                                    setFieldValue,
-                                    isSubmitting }) => (
+                                    setFieldValue }) => (
                                         <Form onSubmit={handleSubmit} >
                                             <Button className="button" variant="primary" type="submit" active={!errors}>Save recipe!</Button>
                                             <Form.Group as={Col} lg={9} controlId="recipeName">

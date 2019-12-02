@@ -7,7 +7,6 @@ const errorAlert = (props) => (
         <Alert.Heading>Error!!</Alert.Heading>
         <div>{props.children}</div>
         <hr />
-        <p>Sorry for inconvenience.</p>
     </Alert>)
 
 export default errorAlert;

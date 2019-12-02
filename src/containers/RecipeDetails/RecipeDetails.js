@@ -29,7 +29,8 @@ class RecipeDetails extends Component {
         },
         edite: false,
         deleted: false,
-        add: false
+        add: false,
+        error: null
     };
 
     componentDidMount() {
@@ -42,7 +43,6 @@ class RecipeDetails extends Component {
             axios.get('/recipe/' + this.props.match.params.id)
                 .then(res => {
                     if (!res) {
-                        console.log('Faild to fetch')
                         throw new Error('Faild to fetch recipe');
                     }
                     this.setState({ recipe: res.data.recipe });
@@ -54,8 +54,22 @@ class RecipeDetails extends Component {
     };
 
     deleteRcepieHandler = async () => {
+        const userId = localStorage.getItem('userId');
+        const token = localStorage.getItem('token');
+
+        if (!userId || !token) {
+            throw new Error('You are not authorized to perform this operation.');
+        };
+
         try {
-            let res = await axios.delete('/recipe/' + this.props.match.params.id)
+            let res = await axios.delete('/recipe/' + this.props.match.params.id, {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                data: {
+                    userId
+                }
+            })
             if (res.status !== 200 && res.status !== 201) {
                 throw new Error('Deleting post failed!');
             };
@@ -64,19 +78,44 @@ class RecipeDetails extends Component {
                 deleted: true
             });
         }
-        catch (error) { console.log(error) }
+        catch (error) {
+            console.log(error)
+        }
     };
 
-    addToShoppingListHandler = () => {
+    addToShoppingListHandler = async () => {
+        const token = localStorage.getItem('token');
+        const userId = localStorage.getItem('userId');
         const ingredients = this.state.recipe.ingredients;
-        axios.post('/shopping-list/1', ingredients)
-            .then((res) => {
-                if (res.status !== 200) {
-                    throw new Error('BŁĄD');
-                }
-                this.showAlert()
-            })
-            .catch(this.catchError);
+        const config = {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        };
+
+        const data = {
+            ingredients: ingredients,
+            userId: userId
+        }
+
+        try {
+            if (userId === null || token === null) {
+                throw new Error('You must be logged in to perform this operation.');
+            }
+            let res = await axios.post('/shopping-list/' + userId, data, config);
+            if (res.status !== 200) {
+                throw new Error('Posting new ingredient failed.');
+            }
+            this.showAlert()
+        }
+        catch (error) {
+            console.log(error);
+            this.setState({ error: error }, () => {
+                window.setTimeout(() => {
+                    this.setState({ error: null })
+                }, 2000)
+            });
+        }
     };
 
     showAlert = () => {
@@ -88,17 +127,28 @@ class RecipeDetails extends Component {
     };
 
     editeHandler = () => {
+        const userId = localStorage.getItem('userId');
+        const token = localStorage.getItem('token');
+
+        if (!userId || !token) {
+            throw new Error('You are not authorized to perform this operation.');
+        }
+
         this.setState({ edite: true });
     };
 
     render() {
+        const userId = localStorage.getItem('userId');
+        let userCheck = (this.state.recipe.userId == userId);
+
         return (
             <Fragment>
                 <Styles>
+                    {this.state.error ? <InfoAlert message={'You must be logged in to add ingredients'} /> : null}
                     {!this.state.edite ? <Container className="justify-content-center">
-                        {this.state.deleted ? <SucsessAlert message={'You successfully deleted recipe.'} /> :
+                        {this.state.deleted ? <SucsessAlert message={'You successfully deleted recipe.'} destination={'/'} /> :
                             <Row className="justify-content-center">
-                                {this.state.add ? <InfoAlert /> : null}
+                                {this.state.add ? <InfoAlert message={'Added to shopping list.'} /> : null}
                                 {this.state.recipe.imageUrl ?
                                     <Col lg={4}>
                                         <Figure.Image
@@ -116,10 +166,10 @@ class RecipeDetails extends Component {
                                     <Row>
                                         <Button variant="mystyle" size="mysize" onClick={() => this.addToShoppingListHandler()}>Add to shopping list</Button>
                                     </Row>
-                                    <Row>
+                                    {userCheck ? <Row>
                                         <Button variant="mystyle" size="mysize" onClick={this.editeHandler}>Edit</Button>
                                         <Button variant="mystyle" size="mysize" onClick={this.deleteRcepieHandler}>Delete</Button>
-                                    </Row>
+                                    </Row> : null}
                                 </Col>
                                 <Col lg={11} >
                                     <Row className="name" style={{ fontSize: '25px' }}>Ingredients list:</Row>

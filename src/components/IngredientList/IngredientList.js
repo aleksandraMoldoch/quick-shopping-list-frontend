@@ -23,7 +23,7 @@ const ingredientList = (props) => (
                             quantity={ingredient.quantity}
                             unit={ingredient.unit}
                             name={ingredient.name}
-                            remove={() => props.remove(ingredient.id)} />)
+                            remove={() => props.remove(index)} />)
                 })}
                 </div>
         </Styles>

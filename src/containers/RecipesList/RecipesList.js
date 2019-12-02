@@ -14,7 +14,8 @@ class RecipesList extends Component {
 
     state = {
         recipes: [],
-        add: false
+        add: false,
+        error: null
     }
 
     componentDidMount() {
@@ -29,24 +30,44 @@ class RecipesList extends Component {
         axios.get('/recipes/')
             .then(res => {
                 if (!res) {
-                    throw new Error('BŁĄD');
+                    throw new Error('Could not get recipes.');
                 }
                 this.setState({ recipes: res.data.recipes });
             })
             .catch(error => {
-                console.log(error.response);
+                console.log(error);
             });
     };
 
-    addToShoppingList = (ingredients) => {
-        axios.post('/shopping-list/1', ingredients)
-            .then(res => {
-                if (!res) {
-                    throw new Error('BŁĄD');
-                }
-                this.showAlert()
-            })
-            .catch(this.catchError);
+    addToShoppingList = async (ingredients) => {
+        const token = localStorage.getItem('token');
+        const userId = localStorage.getItem('userId');
+
+        const config = {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        };
+
+        const data = { ingredients }
+        try {
+            if (userId === null || token === null) {
+                throw new Error('You must be logged in to perform this operation.');
+            }
+            let res = await axios.post('/shopping-list/' + userId, data, config)
+
+            if (!res) {
+                throw new Error('Posting new ingredient failed.');
+            }
+            this.showAlert()
+        } catch (error) {
+            console.log(error)
+            this.setState({ error: error }, () => {
+                window.setTimeout(() => {
+                    this.setState({ error: null })
+                }, 2000)
+            });
+        };
     };
 
     showAlert = () => {
@@ -56,6 +77,7 @@ class RecipesList extends Component {
             }, 1500)
         });
     };
+
 
     renderRecipeHandler = () => {
         return (
@@ -78,7 +100,8 @@ class RecipesList extends Component {
     render() {
         return (
             <React.Fragment>
-                {this.state.add ? <InfoAlert /> : null}
+                {this.state.error ? <InfoAlert message={'You must be logged in to add ingredients to shopping list.'} /> : null}
+                {this.state.add ? <InfoAlert message={'Added to shopping list.'} /> : null}
                 {this.state.recipes ? this.renderRecipeHandler() : <Spinner />}
             </React.Fragment>
         );

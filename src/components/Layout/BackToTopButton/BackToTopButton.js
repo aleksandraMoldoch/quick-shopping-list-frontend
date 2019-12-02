@@ -48,20 +48,18 @@ class BackToTopButton extends Component {
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
-        })
-    }
+        });
+    };
 
     render() {
         return (
             <Fragment>
                 {window.addEventListener("scroll", this.handleScroll)}
                 {this.state.displayButton ?
-                    <Button onClick={this.handleScrollToTop}><i className="fa fa-angle-up"></i></Button> : null
-                }
+                    <Button onClick={this.handleScrollToTop}><i className="fa fa-angle-up"></i></Button>: null}
             </Fragment>
-        )
-    }
-
-}
+        );
+    };
+};
 
 export default BackToTopButton;

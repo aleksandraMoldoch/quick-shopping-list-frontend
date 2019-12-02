@@ -15,6 +15,7 @@ class ShoppingList extends Component {
         super(props)
         this.state = {
             ingredients: [],
+            shoppingListId: null,
             column: {
                 id: 'column-1'
             }
@@ -26,11 +27,21 @@ class ShoppingList extends Component {
     };
 
     loadIngredients = async () => {
+        const token = localStorage.getItem('token');
+        const userId = localStorage.getItem('userId');
+        const config = {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        };
+
         try {
-            let res = await axios.get('/shopping-list/1')
+            let res = await axios.get(
+                '/shopping-list/' + userId, config)
             if (res.status === 200) {
                 this.setState({
                     ingredients: res.data.listIngredient,
+                    shoppingListId: res.data.shoppingListId
                 });
             } else {
                 throw new Error('Unable to fetch ingredients list.');
@@ -92,9 +103,16 @@ class ShoppingList extends Component {
         this.setState({
             ingredients: newIngredients
         });
+        const token = localStorage.getItem('token');
+
+        const config = {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        };
 
         try {
-            let res = await axios.put('/shopping-list/1', ingredients);
+            let res = await axios.put('/shopping-list/' + this.state.shoppingListId, ingredients, config);
             if (res.status === 200) {
                 this.loadIngredients();
             } else {
@@ -106,6 +124,13 @@ class ShoppingList extends Component {
     };
 
     addNewIngredientHandler = async (values) => {
+        const token = localStorage.getItem('token');
+        const userId = localStorage.getItem('userId');
+
+        const config = {
+            headers:
+                { 'Authorization': 'Bearer ' + token }
+        };
 
         if (isNaN(values.quantity)) {
             let quantityArr = values.quantity.split("/");
@@ -117,10 +142,12 @@ class ShoppingList extends Component {
             name: values.ingredientName,
             unit: values.unit,
             quantity: values.quantity
-        }]
+        }];
+
+        const data = { ingredients: ingredient, userId: userId }
 
         try {
-            let res = await axios.post('/shopping-list/1', ingredient)
+            let res = await axios.post('/shopping-list/' + userId, data, config)
             if (res.status === 200) {
                 this.loadIngredients()
             } else {
@@ -132,8 +159,15 @@ class ShoppingList extends Component {
     };
 
     removeIngredientHandler = async (id) => {
+        const token = localStorage.getItem('token');
+
         try {
-            let res = await axios.delete('/shopping-list/1', { data: { id } });
+            let res = await axios.delete('/shopping-list/' + this.state.shoppingListId, {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                data: { id }
+            });
             if (res.status !== 200) {
                 throw new Error('Unable to delete ingredient.');
             }

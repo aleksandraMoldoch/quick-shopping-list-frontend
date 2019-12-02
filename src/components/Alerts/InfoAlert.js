@@ -2,9 +2,9 @@ import React from 'react';
 
 import Alert from 'react-bootstrap/Alert';
 
-const infoAlert = () => (
+const infoAlert = (props) => (
     <Alert variant='warning'>
-        Added to shopping list.
+        {props.message}
     </Alert>
 );
 
