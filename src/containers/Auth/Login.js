@@ -91,7 +91,8 @@ const Login = (props) => {
                                             Login!
                                     </Button>
                                     </Card.Body>
-                                    <Card.Footer>You don't have an account? <Link to='/singup'>Create one!</Link></Card.Footer>
+                                    <Card.Footer>For demo purpose you can use login: test, password: Test123.<br/>
+                                        <Link to='/singup'> Or create account!</Link></Card.Footer>
                                 </Card>
                             </Form>
                         </Styles>
