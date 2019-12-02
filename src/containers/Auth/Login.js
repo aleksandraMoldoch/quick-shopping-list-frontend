@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { Formik } from 'formik';
 import axios from '../../axios';
 
@@ -91,7 +91,7 @@ const Login = (props) => {
                                             Login!
                                     </Button>
                                     </Card.Body>
-                                    <Card.Footer>You don't have an account? <a href='/singup'>Create one!</a></Card.Footer>
+                                    <Card.Footer>You don't have an account? <Link to='/singup'>Create one!</Link></Card.Footer>
                                 </Card>
                             </Form>
                         </Styles>

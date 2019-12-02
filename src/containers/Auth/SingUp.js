@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Formik } from 'formik';
+import { Link } from 'react-router-dom';
 import axios from '../../axios';
 
 import Button from 'react-bootstrap/Button';
@@ -107,7 +108,7 @@ class Singup extends Component {
                                                 Sign Up!
                                             </Button>
                                         </Card.Body>
-                                        <Card.Footer>Already have account? <a href='/login'>Go to login!</a></Card.Footer>
+                                        <Card.Footer>Already have account? <Link to='/login'>Go to login!</Link></Card.Footer>
                                     </Card>
                                 </Form>
                             </Styles>
