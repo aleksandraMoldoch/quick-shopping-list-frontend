@@ -25,7 +25,7 @@ const Login = (props) => {
                 setAuthTokens(res.data.token);
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('userId', res.data.user.id);
-                return props.history.push('/');
+                return props.history.push('/recipes');
             } else {
                 throw new Error('Unable to fetch user');
             }
