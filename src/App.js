@@ -28,7 +28,7 @@ function App() {
             <BrowserRouter basename="/quick-shopping/">
                 <Layout>
                     <Switch>
-                        <Route exact path='/' component={RecipesList} />
+                        <Route exact path='/' component={Login} />
                         <Route exact path='/login' component={Login} />
                         <Route exact path='/logout' component={Logout} />
                         <Route exact path='/singup' component={Singup} />
